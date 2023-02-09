@@ -1,7 +1,9 @@
 package com.javedrpi.productservice.controller;
 
 import com.javedrpi.productservice.dto.ProductDto;
+import com.javedrpi.productservice.entity.Product;
 import com.javedrpi.productservice.service.ProductService;
+import com.javedrpi.productservice.service.TemplateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Range;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,12 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
+    private final TemplateRepository repository;
+
+    @GetMapping("all2")
+    public Flux<Product> getAll2(){
+        return repository.findAll();
+    }
 
     @GetMapping("all")
     public Flux<ProductDto> getAll(){
