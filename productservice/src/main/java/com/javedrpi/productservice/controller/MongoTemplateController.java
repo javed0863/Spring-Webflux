@@ -14,8 +14,8 @@ import reactor.core.publisher.Flux;
 public class MongoTemplateController {
     private final TemplateRepository repository;
 
-    @GetMapping("findAllUsingMongoTemplate")
-    public Flux<Product> findAllUsingMongoTemplate(){
+    @GetMapping("findAll")
+    public Flux<Product> findAll(){
         return repository.findAll();
     }
 }
