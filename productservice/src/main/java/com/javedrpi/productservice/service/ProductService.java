@@ -1,9 +1,12 @@
 package com.javedrpi.productservice.service;
 
 import com.javedrpi.productservice.dto.ProductDto;
+import com.javedrpi.productservice.entity.Product;
 import com.javedrpi.productservice.repository.IProductRepository;
 import com.javedrpi.productservice.utils.EntityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Range;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -50,5 +53,9 @@ public class ProductService {
 
     public Flux<ProductDto> getProductsByPriceRange(Range<Integer> closed) {
         return productRepository.findByPriceBetween(closed);
+    }
+
+    public Flux<Product> findByDescriptionContainsIgnoreCase(String name) {
+        return productRepository.findByDescriptionContainsIgnoreCase(name, PageRequest.of(0,3));
     }
 }
