@@ -38,11 +38,27 @@ public class DataSetupService implements CommandLineRunner {
         final ProductDto tv = ProductDto.builder().price(600).description("Television").build();
         final ProductDto bed = ProductDto.builder().price(800).description("Bed").build();
 
-        Flux.just(macbook, iPad, iWatch, appleTv, airpods, iphone,
-                        fenix, nike, levisJacket,camera, bulb, bicycle,
-                        mirror, chair, printer,tv, bed)
-                .flatMap(o -> service.insertProduct(Mono.just(o)))
-                .subscribe(System.out::println);
-
+        for (int i = 0; i < 1; i++) {
+            Flux.just(macbook, iPad, iWatch, appleTv, airpods, iphone,
+                            fenix, nike, levisJacket,camera, bulb, bicycle,
+                            mirror, chair, printer,tv, bed)
+                    .flatMap(o -> service.insertProduct(Mono.just(o)))
+                    .subscribe(System.out::println);
+            Flux.just(macbook, iPad, iWatch, appleTv, airpods, iphone)
+                    .flatMap(o -> service.insertProduct(Mono.just(o)))
+                    .subscribe(System.out::println);
+            /*Flux.just(macbook, iPad, bulb, bicycle,
+                            mirror, chair, printer,tv, bed)
+                    .flatMap(o -> service.insertProduct(Mono.just(o)))
+                    .subscribe(System.out::println);
+            Flux.just(macbook, iPad, iWatch, appleTv, airpods, mirror, chair, printer,tv, bed)
+                    .flatMap(o -> service.insertProduct(Mono.just(o)))
+                    .subscribe(System.out::println);
+            Flux.just( levisJacket,camera, bulb, bicycle,
+                            mirror, chair)
+                    .flatMap(o -> service.insertProduct(Mono.just(o)))
+                    .subscribe(System.out::println);*/
+        }
+        Thread.sleep(100);
     }
 }
