@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.Date;
 import java.util.Objects;
@@ -38,7 +39,7 @@ public class TemplateRepository {
     }
 
     public Flux<Product> updateAllProductRefUsingProdIdAndDesc() {
-        log.info("Updating all... ");
+        log.info("Update Process Started ... ");
         long start = new Date().getTime();
 
         template.findDistinct("description", Product.class, String.class)
@@ -46,13 +47,15 @@ public class TemplateRepository {
                 .flatMap(this::getProducts)
                 .takeWhile(Objects::nonNull)
 //                .limitRate(500)
+                .flatMap(this::performUpdate)
+                .subscribeOn(Schedulers.boundedElastic())
                 .subscribe(
-                        this::performUpdate,
+                        s -> log.info("Updated: " + s),
                         null,
                         () -> {
-                            log.info("COMPLETED");
+                            log.info(">> COMPLETED <<");
                             long end = new Date().getTime();
-                            log.info("Total Time: "+((end-start)/1000));
+                            log.info("Total Time: "+(end-start) + " ms");
                         }
                 );
         return Flux.empty();
@@ -63,13 +66,14 @@ public class TemplateRepository {
         return template.find(query, Product.class);
     }
 
-    private void performUpdate(Product s) {
-        log.info("Updating "+ s.toString());
+    private Flux<Product> performUpdate(Product s) {
+        log.info("Input: "+ s.toString());
         Query query = new Query(Criteria.where("id").is(s.getId()));
-        template.findAndModify(
+        return Flux.from(template.findAndModify(
                 query,
                 Update.update("pRef", s.getId() + "-" + s.getDescription()),
                 Product.class
-        ).subscribe(updateResult -> log.info("---> "+updateResult.toString()));
+        ));
     }
+
 }
