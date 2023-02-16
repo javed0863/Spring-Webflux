@@ -18,4 +18,5 @@ public class Product {
     private String id;
     private String description;
     private Integer price;
+    private String pRef;
 }

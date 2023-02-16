@@ -18,4 +18,14 @@ public class MongoTemplateController {
     public Flux<Product> findAll(){
         return repository.findAll();
     }
+
+    @GetMapping("updateAllProdRef")
+    public Flux<Product> updateAll(){
+        return repository.updateAllProductRef();
+    }
+
+    @GetMapping("updateAll")
+    public Flux<Product> updateAllProductRefUsingProdIdAndDesc(){
+        return repository.updateAllProductRefUsingProdIdAndDesc();
+    }
 }
